@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Synth UI — UI Sound Designer</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">SYNTH<span>UI</span><em>· UI sound scene designer</em></div>
+    <div class="transport">
+      <button id="btnPlay" class="primary">▶ Play scene</button>
+      <button id="btnStop">■ Stop</button>
+      <button id="btnExport">⬇ Export WAV</button>
+    </div>
+  </header>
+
+  <main class="grid">
+    <!-- ──────────── Left: prompt + timeline builder ──────────── -->
+    <section class="panel">
+      <h2><i>1</i> Describe the scene</h2>
+      <textarea id="prompt" rows="4" spellcheck="false"></textarea>
+      <button id="btnBuild" class="primary wide">⚡ Build timeline from prompt</button>
+
+      <h2><i>2</i> Scene script</h2>
+      <label class="field">Message typed on the phone
+        <input id="sceneMessage" type="text" />
+      </label>
+      <label class="field">PM101 bot reply
+        <input id="sceneReply" type="text" />
+      </label>
+
+      <h2><i>3</i> Timeline events <small>(click to preview · ✕ to remove)</small></h2>
+      <div id="chips" class="chips"></div>
+      <div class="palette">
+        <small>Add event:</small>
+        <div id="palette"></div>
+      </div>
+    </section>
+
+    <!-- ──────────── Center: visualizers + post production ──────────── -->
+    <section class="panel">
+      <h2><i>4</i> Output monitor</h2>
+      <div id="timeline" class="timeline">
+        <div id="playhead" class="playhead"></div>
+      </div>
+      <canvas id="viz" class="viz"></canvas>
+
+      <h2><i>5</i> Post production <small>(fully adjustable — tweaks auto-preview)</small></h2>
+      <div id="tabs" class="tabs"></div>
+      <div id="params" class="params"></div>
+      <div class="settings-actions">
+        <button id="btnPreviewSound">▶ Preview selected</button>
+        <button id="btnResetSound">↺ Reset selected</button>
+        <button id="btnResetAll">⟲ Reset everything</button>
+      </div>
+    </section>
+
+    <!-- ──────────── Right: iPhone mockup ──────────── -->
+    <section class="panel phone-panel">
+      <h2><i>6</i> Scene preview</h2>
+      <div class="iphone" id="iphone">
+        <div class="ph-notch"></div>
+        <div class="ph-screen">
+          <div class="ph-statusbar"><span>9:41</span><span>📶 ⌁ 🔋</span></div>
+
+          <div class="ph-home active">
+            <div class="ph-icons">
+              <div class="ph-icon"><span>📷</span><small>Camera</small></div>
+              <div class="ph-icon"><span>🗺️</span><small>Maps</small></div>
+              <div class="ph-icon"><span>🎵</span><small>Music</small></div>
+              <div class="ph-icon"><span>📧</span><small>Mail</small></div>
+              <div class="ph-icon ph-tg-icon"><span>✈️</span><small>Telegram</small></div>
+              <div class="ph-icon"><span>🌤️</span><small>Weather</small></div>
+              <div class="ph-icon"><span>📝</span><small>Notes</small></div>
+              <div class="ph-icon"><span>⚙️</span><small>Settings</small></div>
+            </div>
+          </div>
+
+          <div class="ph-chat">
+            <div class="ph-chat-header">
+              <span class="ph-back">‹</span>
+              <div class="ph-avatar">PM</div>
+              <div class="ph-title">
+                <b>PM101 Bot</b>
+                <small class="ph-bot-status">bot</small>
+              </div>
+            </div>
+            <div class="ph-messages"></div>
+            <div class="ph-inputbar">
+              <span class="ph-clip">📎</span>
+              <div class="ph-draft placeholder">Message</div>
+              <span class="ph-sendbtn">➤</span>
+            </div>
+          </div>
+        </div>
+        <div class="ph-homebar"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">All sounds are synthesized in-browser with the Web Audio API — no samples. Settings persist locally.</footer>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+{
+  "name": "synth-ui-demo",
+  "version": "1.0.0",
+  "description": "Prompt-driven UI sound scene designer — synthesize, post-produce and visualize UI sound effects in the browser",
+  "type": "module",
+  "scripts": {
+    "start": "python3 -m http.server 8080 || npx serve ."
+  },
+  "private": true
+}
