@@ -1,77 +1,75 @@
-# Synth UI Demo
+# Synth UI — synthetic UI demo builder
 
-A prompt-driven **UI sound scene designer**. Describe an interaction in plain
-English — e.g. *"tap the Telegram app on the iPhone, type a message, send it to
-the PM101 bot, connecting… then it returns the relevant information"* — and the
-app builds a timeline of fully synthesized UI sounds, plays them in sync with an
-animated iPhone/Telegram mockup, and gives you full post-production control over
-every sound.
+Prompt → **working, animated UI mockup** you can embed anywhere.
 
-Everything is generated in-browser with the **Web Audio API** — no samples, no
-dependencies, no build step.
+Describe an interaction in plain English — or just paste a website URL — and
+Synth UI generates a *synthetic* product UI (the kind of polished fake-UI
+demos you see on monday.com's marketing pages or claude.ai/design) and
+choreographs it live: a virtual cursor moves, clicks, types; cards get added,
+statuses flip, bots reply, modals open. Everything is real DOM rendered
+in-browser — no screenshots, no video — and fully adjustable after generation.
 
-![Sections](#) <!-- open index.html and press ▶ Play scene -->
+**Live app:** https://pm101-co-uk.github.io/Synth-UI-Demo/
 
-## Run it
+## What it does
 
-Any static file server works (ES modules need `http://`, not `file://`):
+1. **Prompt it** — e.g.
+   - `https://monday.com` → fetches the site, extracts brand colors, name,
+     nav and headline, and builds a themed landing-page mock with a
+     click-the-CTA → signup-modal demo
+   - `iPhone Telegram chat: type a message to the PM101 bot and it replies`
+     → an iPhone-framed chat scene
+   - `monday.com style kanban board where a task is added and marked Done`
+   - `SaaS signup form demo` / `Analytics dashboard with animated charts`
+2. **Watch it build** — live preview with an animated cursor (click ripples,
+   real typing with a caret, scrolling, toasts), inside a browser-window,
+   iPhone, or bare frame.
+3. **Post-produce everything** — template, frame, brand name, primary/accent
+   colors, dark mode, corner radius, font, playback speed, cursor style,
+   sounds (synthesized UI sfx), looping. Each step of the choreography is
+   editable: change typed text, reorder, remove, add new steps. Full scene
+   JSON is exposed for total control.
+4. **Embed anywhere** — *Copy embed* gives you an `<iframe>` snippet. The
+   whole scene is serialized into the URL of the hosted `embed.html` player,
+   so the live demo runs on any website with one paste. No backend.
+
+## Templates
+
+| Template | Demo choreography |
+|---|---|
+| 🌐 Website landing | scan nav → click CTA → signup modal → type email → success |
+| 💬 Chat / bot | focus input → type → send → typing dots → bot reply |
+| 📋 Kanban board | click "+ Add item" → type task → card appears → mark Done |
+| 📝 Signup form | type name + email → submit → success state |
+| 📈 Analytics dashboard | charts animate in → switch date range → data updates |
+
+## URL analysis
+
+Paste any address and Synth UI fetches the page (via a public CORS proxy,
+since this is a fully static app), then extracts: site name, meta
+description, `<h1>`, nav links, `theme-color`/dominant saturated colors, and
+favicon — and themes the mock with them. If the fetch is blocked, it falls
+back to a deterministic palette generated from the domain.
+
+## Run locally
 
 ```bash
-python3 -m http.server 8080
-# or: npx serve .
+python3 -m http.server 8080   # or: npx serve .
 ```
 
-Then open <http://localhost:8080>.
-
-## How it works
-
-1. **Describe the scene** — type a prompt and hit **⚡ Build timeline**. A
-   keyword parser turns the narrative into ordered events (tap, app open,
-   typing, send, connecting, bot reply, success, error), preserving the order
-   they're mentioned. Mentioning a *bot* / *pm101* implies a connect→reply
-   round-trip automatically.
-2. **Scene script** — edit the message typed on the phone and the PM101 bot's
-   reply. The typing sound length follows the message length.
-3. **Timeline events** — click a chip to audition it, ✕ to remove, or add more
-   from the palette.
-4. **Output monitor** — laid-out timeline with a moving playhead, plus a live
-   oscilloscope and spectrum analyser of the master output.
-5. **Post production** — every sound has fully adjustable synthesis params
-   (waveform, pitch + sweep, arpeggio, ADSR, noise mix, filter, pan, FX sends,
-   humanize). The **Master FX** tab has volume, scene speed, reverb, ping
-   delay, 3-band EQ and a compressor — master tweaks apply live while playing.
-   Tweaks auto-preview on release so you hear changes as you build.
-6. **Scene preview** — an iPhone mockup plays the whole story in sync: tap
-   ripple on the Telegram icon → app opens → message types out → sends →
-   "PM101 Bot typing…" → reply bubble with the relevant information.
-7. **⬇ Export WAV** — renders the scene offline (including reverb tail) to a
-   16-bit stereo WAV.
-
-Settings persist in `localStorage`; use **⟲ Reset everything** to get back to
-factory defaults.
-
-## Sound palette
-
-| Sound | Character |
-|---|---|
-| 👆 UI Tap | short sine "tock" with noise transient + pitch drop |
-| 📱 App Open | band-passed noise/triangle swoosh sweeping up |
-| ⌨️ Keyboard Key | high-passed noise click, heavily humanized |
-| 🛫 Send Swoosh | rising sine sweep, Telegram-style |
-| 📡 Connecting Blips | resonant square blip arpeggio with delay send |
-| 💬 Bot Reply | two-note sine chime (notification) |
-| ✅ Success Chime | major arpeggio with reverb |
-| ⛔ Error Buzz | falling sawtooth buzz |
+Open <http://localhost:8080>. (ES modules need `http://`, not `file://`.)
 
 ## Project layout
 
 ```
-index.html        layout + iPhone mockup markup
-styles.css        dark studio theme
-js/app.js         state, settings UI, transport, persistence
-js/sounds.js      synthesis engine, sound/event definitions, master FX chain
-js/parser.js      prompt → timeline event parser
-js/phone.js       iPhone/Telegram mockup animation driver
-js/visualizer.js  oscilloscope + spectrum + timeline strip
-js/wav.js         offline render + WAV encoder
+index.html      editor (prompt, steps, preview, post production, JSON)
+embed.html      standalone player — reads the scene from the URL hash
+styles.css      editor chrome + device frames + mock component library
+js/app.js       editor glue, settings UI, embed export, persistence
+js/scenes.js    scene model, 5 mock templates + ops, prompt → scene generator
+js/engine.js    player: cursor animation, step runner, frames, sound fx
+js/analyze.js   website fetch + brand extraction (colors, name, nav, h1)
+js/sounds.js    Web Audio synthesis engine for the optional UI sounds
 ```
+
+Deployed automatically to GitHub Pages on every push to `main`.
